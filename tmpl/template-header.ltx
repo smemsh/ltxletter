@@ -1,0 +1,62 @@
+%
+
+% changes to make if editing this as a template are after
+% the \begin{letter} (near the end)
+
+\documentclass{letter}
+\usepackage{wasysym}
+
+% ADJUST as needed
+\usepackage[margin=25mm]{geometry}
+
+\usepackage{parskip}
+
+\begin{document}
+
+	% the default is just far too small to read, I can't
+	% understand why it's the default
+	\fontfamily{cmss}
+
+	% ADJUST as needed
+	\fontsize{13}{15}
+	\selectfont
+
+        % inter-paragraph skip
+	% this is needed in combination with parskip
+	% package...the inter-paragraph space still isn't
+	% enough even with the parskip package.  But that
+	% package does help the enumerated lists and such
+	% with 0pt paragraph indents, so it's needed beyond
+	% simply changing parskip and parsep.
+	% ADJUST as needed
+	\advance \parskip by 5pt
+
+	\begin{letter}
+		%
+		% \name does not line up with address for
+		% some reason so we have to actually include
+		% it in address and leave name blank... this
+		% is a hack but seems to work.
+		%
+		% ADJUST as needed:
+		% - newlines
+		% - name and address in \address and \opening
+		%
+		\name		{}
+		\address	{
+				  Your Name\\
+				  1234 Sender Rd, City, ST 56789 }
+		\opening	{
+				  Recipient Name, Recipient Place \\
+				  123 Destination Rd \#45, City, ST 67890 \\
+				  \\
+				  \\
+				  Mr. Recipient,
+				}
+		\input		{ __M4SUB_ESCAPED_NAME__		}
+		\closing	{
+				  Thanks for your help,
+				  \signature {Your Name}
+		}
+	\end{letter}
+\end{document}
