@@ -36,6 +36,9 @@ s,\.\.\.,{\\ldots},g
 # verbose escape tilde, which is used for n~ etc
 s,~,{\\textasciitilde{}},g
 
+# pound designates parameters for macros and must be escaped
+s,#,\\#,g
+
 # ellipses to their TeX equivalents
 /^[[:blank:]]+\*[[:blank:]]+\*[[:blank:]]+\*[[:blank:]]*$/ c\
 \\begin{center}\
