@@ -82,7 +82,7 @@ function \
 make_bullet (leader)
 {
 	if (last_was_blank)
-		skiplen = "0.1em";
+		skiplen = "1em";
 	else
 		skiplen = "0.2em";
 
