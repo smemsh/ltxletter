@@ -13,6 +13,8 @@ Instructions to make a new letter::
    vim lettername{,-header}.txt
    make
 
+Optionally modify the places commented with ``ADJUST``.
+
 **NOTE:** there MUST be EXACTLY ONE text file in the build
 directory in order for this to work.
 
