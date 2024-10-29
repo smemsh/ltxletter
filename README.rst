@@ -18,5 +18,6 @@ Optionally modify the places commented with ``ADJUST``.
 **NOTE:** there MUST be EXACTLY ONE text file in the build
 directory in order for this to work.
 
-| *author:* scott@smemsh.net
-| *license:* https://spdx.org/licenses/GPL-2.0
+| scott@smemsh.net
+| https://github.com/smemsh/ltxletter/
+| https://spdx.org/licenses/GPL-2.0
