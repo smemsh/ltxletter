@@ -15,8 +15,11 @@ BEGIN {
 	BULLET		= "- ";
 	sz_bullet	= length(BULLET);
 	indent_level	= 0;
-	indentations[0]	= "";
 	last_was_blank	= 0;
+	bigskip		= "1em";
+	smallskip	= "0.2em";
+	indentations[0]	= "";
+	indentations[0,"skiplen"] = "\\savedskip";
 
 	for (i = 0; i < sz_bullet; i++)
 		stretch = stretch sprintf(" ");
@@ -26,10 +29,11 @@ BEGIN {
 
 	off_bullet = index($0, BULLET) - 1;
 	whitespace = substr($0, 0, off_bullet);
+	#print("whitelen: " length(whitespace))
 	rest_of_line = substr($0, off_bullet + sz_bullet + 1);
 
 	len = indentations[indent_level,"length"];
-	if (off_bullet > len) {
+	if (off_bullet > len || len == 0) {
 		increment_indentation(whitespace);
 	} else if (off_bullet < len)
 		decrement_indentation(whitespace);
@@ -49,6 +53,12 @@ BEGIN {
 
 	if (off < len)
 		decrement_indentation(whitespace);
+
+	#print("hitoff " off " ilvl " indent_level);
+	if (off == 0 && indent_level) {
+		#print("hitbig");
+		do_itemization_end();
+	}
 }
 
 {
@@ -69,25 +79,51 @@ BEGIN {
 function \
 make_itemization_start ()
 {
-	printf("\\begin{itemize}\n\n");
+	printf("\n")
+
+	if (last_was_blank)
+		skiplen = bigskip;
+	else
+		skiplen = smallskip;
+	indentations[indent_level,"skiplen"] = skiplen;
+
+	leader = indentations[indent_level,"leader"];
+	printf("%s\\setlength{\\parskip}{%s}\n", leader, skiplen);
+	printf("%s\\begin{itemize}[itemsep=%s,parsep=0em]\n\n",
+	       leader, smallskip);
 }
 
 function \
 make_itemization_end ()
 {
-	printf("\\end{itemize}\n\n");
+	leader = indentations[indent_level+1,"leader"];
+	skiplen = indentations[indent_level,"skiplen"];
+	printf("%s\\end{itemize}\n\n", leader);
+	printf("%s\\setlength{\\parskip}{%s}\n\n", leader, skiplen);
+}
+
+function \
+do_itemization_end ()
+{
+	#print("inlvl " indent_level);
+	indentations[indent_level,"itemsep"] = 0;
+	indent_level--;
+	make_itemization_end();
 }
 
 function \
 make_bullet (leader)
 {
 	if (last_was_blank)
-		skiplen = "1em";
+		itemsep = bigskip
 	else
-		skiplen = "0.2em";
+		itemsep = smallskip
+	if (indentations[indent_level,"itemsep"] != itemsep) {
+		indentations[indent_level,"itemsep"] = itemsep;
+		printf("%s%s\\setlength{\\itemsep}{%s}\n",
+		       leader, stretch, itemsep);
+	}
 
-	printf("%s%s\\setlength{\\parskip}{%s}\n", leader, stretch,
-						   skiplen);
 	printf("%s%s\\item\n%s%s", leader, stretch,
 				   leader, stretch);
 }
@@ -105,9 +141,10 @@ function \
 decrement_indentation (leader)
 {
 	len = length(leader);
-	while (indentations[indent_level,"length"] > len) {
-		indent_level--;
-		printf(indentations[indent_level,"leader"]);
-		make_itemization_end();
-	}
+	#print("hit on indent level " indent_level \
+	#      ", len " len \
+	#      ", inlen " indentations[indent_level,"length"]);
+
+	while (indentations[indent_level,"length"] > len && indent_level)
+		do_itemization_end();
 }
