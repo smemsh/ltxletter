@@ -61,3 +61,6 @@ s,([[:graph:]]+)\*\*,\1},g
 # make *blah blah* italicized TeX, possibly multiline
 s,\*([[:graph:]]+),\\textsl{\1,g
 s,([[:graph:]]+)\*,\1},g
+
+# urls can use hyperref package escape \url{}
+s,https?://[^[:space:]"]+,\\url{\0},g
